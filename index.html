@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>上海市篮球协会 · 青少年等级考</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange: #E8500A;
+    --orange-light: #FF6B2B;
+    --orange-pale: #FFF3EE;
+    --dark: #1A1A1A;
+    --mid: #4A4A4A;
+    --light: #8A8A8A;
+    --border: #EBEBEB;
+    --white: #FFFFFF;
+    --bg: #F7F7F5;
+    --success: #1A8C4E;
+    --success-bg: #EDFAF3;
+    --warning: #B85C00;
+    --warning-bg: #FFF7ED;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans SC', sans-serif;
+    background: var(--bg);
+    color: var(--dark);
+    min-height: 100vh;
+    font-size: 14px;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 20px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--dark);
+  }
+  .logo-icon {
+    width: 32px; height: 32px;
+    background: var(--orange);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: white;
+    font-size: 16px;
+  }
+  .nav-tabs {
+    display: flex;
+    gap: 4px;
+  }
+  .nav-tab {
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: var(--mid);
+    font-family: inherit;
+    transition: all .15s;
+  }
+  .nav-tab:hover { background: var(--bg); color: var(--dark); }
+  .nav-tab.active { background: var(--orange); color: white; font-weight: 500; }
+
+  /* ── Main layout ── */
+  .main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 24px 20px 60px;
+  }
+
+  /* ── Page ── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ── Hero (首页) ── */
+  .hero {
+    background: linear-gradient(135deg, var(--dark) 0%, #2D1F14 100%);
+    border-radius: 16px;
+    padding: 36px 32px;
+    color: white;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: '🏀';
+    position: absolute;
+    right: 24px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 80px;
+    opacity: .12;
+  }
+  .hero-tag {
+    display: inline-block;
+    background: var(--orange);
+    color: white;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    letter-spacing: .5px;
+  }
+  .hero h1 { font-size: 26px; font-weight: 700; line-height: 1.3; margin-bottom: 8px; }
+  .hero p { color: rgba(255,255,255,.6); font-size: 13px; line-height: 1.6; max-width: 420px; }
+  .hero-actions { margin-top: 24px; display: flex; gap: 10px; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--orange);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background .15s;
+  }
+  .btn-primary:hover { background: var(--orange-light); }
+  .btn-ghost {
+    background: rgba(255,255,255,.1);
+    color: white;
+    border: 1px solid rgba(255,255,255,.2);
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all .15s;
+  }
+  .btn-ghost:hover { background: rgba(255,255,255,.18); }
+
+  /* ── Info cards row ── */
+  .info-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .info-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 20px;
+    border: 1px solid var(--border);
+  }
+  .info-card-label { font-size: 11px; color: var(--light); margin-bottom: 4px; text-transform: uppercase; letter-spacing: .5px; }
+  .info-card-value { font-size: 28px; font-weight: 700; color: var(--dark); }
+  .info-card-sub { font-size: 12px; color: var(--light); margin-top: 2px; }
+
+  /* ── Exam sessions ── */
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .section-title { font-size: 15px; font-weight: 600; color: var(--dark); }
+  .section-link { font-size: 12px; color: var(--orange); cursor: pointer; }
+
+  .exam-list { display: flex; flex-direction: column; gap: 10px; }
+  .exam-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .exam-card:hover { border-color: var(--orange); box-shadow: 0 2px 12px rgba(232,80,10,.08); }
+  .exam-date-box {
+    width: 50px; min-width: 50px;
+    text-align: center;
+    background: var(--orange-pale);
+    border-radius: 8px;
+    padding: 8px 4px;
+  }
+  .exam-date-month { font-size: 10px; color: var(--orange); font-weight: 500; }
+  .exam-date-day { font-size: 22px; font-weight: 700; color: var(--orange); line-height: 1.1; }
+  .exam-info { flex: 1; }
+  .exam-name { font-size: 14px; font-weight: 600; color: var(--dark); margin-bottom: 4px; }
+  .exam-meta { font-size: 12px; color: var(--light); display: flex; gap: 12px; }
+  .exam-badge {
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .badge-open { background: var(--success-bg); color: var(--success); }
+  .badge-soon { background: var(--warning-bg); color: var(--warning); }
+  .badge-closed { background: var(--bg); color: var(--light); }
+
+  /* ── 报名页 ── */
+  .form-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .form-card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group.full { grid-column: 1 / -1; }
+  .form-label { font-size: 12px; color: var(--mid); font-weight: 500; }
+  .form-input, .form-select {
+    height: 40px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0 12px;
+    font-size: 13px;
+    font-family: inherit;
+    color: var(--dark);
+    background: var(--white);
+    transition: border .15s;
+    outline: none;
+  }
+  .form-input:focus, .form-select:focus { border-color: var(--orange); }
+  .form-select { cursor: pointer; }
+
+  .level-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .level-btn {
+    border: 1px solid var(--border);
+    background: var(--white);
+    border-radius: 8px;
+    padding: 12px 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all .15s;
+    font-family: inherit;
+  }
+  .level-btn:hover { border-color: var(--orange); }
+  .level-btn.selected { border-color: var(--orange); background: var(--orange-pale); }
+  .level-btn-num { font-size: 18px; font-weight: 700; color: var(--dark); }
+  .level-btn.selected .level-btn-num { color: var(--orange); }
+  .level-btn-text { font-size: 11px; color: var(--light); }
+
+  .submit-row { display: flex; justify-content: flex-end; gap: 10px; margin-top: 4px; }
+  .btn-cancel {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: white;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: inherit;
+    color: var(--mid);
+  }
+  .btn-submit {
+    padding: 10px 24px;
+    border-radius: 8px;
+    border: none;
+    background: var(--orange);
+    color: white;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .btn-submit:hover { background: var(--orange-light); }
+
+  /* ── 成绩查询 ── */
+  .search-box {
+    background: var(--white);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 20px;
+    margin-bottom: 16px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+  }
+  .search-box .form-group { flex: 1; margin: 0; }
+  .btn-search {
+    height: 40px;
+    padding: 0 20px;
+    background: var(--orange);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    white-space: nowrap;
+  }
+
+  .result-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .result-header {
+    padding: 16px 20px;
+    background: linear-gradient(90deg, var(--dark), #2D1F14);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .result-name { font-size: 16px; font-weight: 600; }
+  .result-id { font-size: 12px; opacity: .6; }
+  .result-body { padding: 20px; }
+  .result-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .result-item-label { font-size: 11px; color: var(--light); margin-bottom: 4px; }
+  .result-item-value { font-size: 15px; font-weight: 600; color: var(--dark); }
+  .score-big {
+    font-size: 40px;
+    font-weight: 700;
+    color: var(--orange);
+    line-height: 1;
+  }
+  .score-label { font-size: 12px; color: var(--light); margin-top: 4px; }
+  .result-divider { height: 1px; background: var(--border); margin: 16px 0; }
+  .cert-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--success-bg);
+    border-radius: 8px;
+  }
+  .cert-text { font-size: 13px; color: var(--success); font-weight: 500; }
+  .cert-sub { font-size: 11px; color: var(--light); margin-top: 2px; }
+  .btn-cert {
+    font-size: 12px;
+    padding: 6px 14px;
+    border-radius: 6px;
+    background: var(--success);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  /* ── 考试流程页 ── */
+  .flow-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .flow-section {
+    background: var(--white);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .flow-section-head {
+    padding: 14px 18px;
+    background: var(--dark);
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .flow-steps { padding: 16px 18px; }
+  .flow-step {
+    display: flex;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .flow-step:last-child { border-bottom: none; }
+  .step-num {
+    width: 22px; min-width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--orange-pale);
+    color: var(--orange);
+    font-size: 11px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 1px;
+  }
+  .step-content { flex: 1; }
+  .step-title { font-size: 13px; font-weight: 600; color: var(--dark); margin-bottom: 2px; }
+  .step-desc { font-size: 12px; color: var(--light); line-height: 1.5; }
+
+  .tip-box {
+    background: var(--warning-bg);
+    border: 1px solid #FFD9A8;
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-top: 16px;
+    font-size: 12px;
+    color: var(--warning);
+    line-height: 1.6;
+    grid-column: 1 / -1;
+  }
+  .tip-box strong { font-weight: 600; }
+
+  /* ── Empty / loading states ── */
+  .empty-state {
+    text-align: center;
+    padding: 48px 20px;
+    color: var(--light);
+  }
+  .empty-icon { font-size: 40px; margin-bottom: 12px; }
+  .empty-text { font-size: 14px; }
+
+  /* ── Toast ── */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--dark);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    transition: transform .3s ease;
+    z-index: 999;
+    white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* ── Modal ── */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.4);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--white);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 440px;
+    overflow: hidden;
+  }
+  .modal-header {
+    padding: 18px 20px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .modal-title { font-size: 15px; font-weight: 600; }
+  .modal-close { cursor: pointer; font-size: 18px; color: var(--light); border: none; background: none; }
+  .modal-body { padding: 20px; }
+  .modal-detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .modal-detail-row:last-child { border-bottom: none; }
+  .modal-detail-label { color: var(--light); }
+  .modal-detail-value { font-weight: 500; color: var(--dark); }
+  .modal-footer {
+    padding: 14px 20px;
+    background: var(--bg);
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+
+  /* responsive */
+  @media (max-width: 600px) {
+    .info-row { grid-template-columns: 1fr 1fr; }
+    .form-grid { grid-template-columns: 1fr; }
+    .level-grid { grid-template-columns: repeat(2, 1fr); }
+    .flow-container { grid-template-columns: 1fr; }
+    .result-grid { grid-template-columns: 1fr 1fr; }
+    .hero { padding: 24px 20px; }
+    .hero h1 { font-size: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-icon">🏀</div>
+      <span>青少年篮球等级考</span>
+    </div>
+    <nav class="nav-tabs">
+      <button class="nav-tab active" onclick="switchPage('home')">首页</button>
+      <button class="nav-tab" onclick="switchPage('register')">报名</button>
+      <button class="nav-tab" onclick="switchPage('score')">成绩查询</button>
+      <button class="nav-tab" onclick="switchPage('flow')">考试流程</button>
+    </nav>
+  </div>
+</header>
+
+<!-- Main -->
+<main class="main">
+
+  <!-- ══ 首页 ══ -->
+  <div id="page-home" class="page active">
+    <div class="hero">
+      <div class="hero-tag">上海市篮球协会 · 2025年度</div>
+      <h1>青少年篮球<br>技能等级考核</h1>
+      <p>系统评定篮球技能水平，1–4级全覆盖，专业认证，助力成长。</p>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="switchPage('register')">立即报名</button>
+        <button class="btn-ghost" onclick="switchPage('score')">查询成绩</button>
+      </div>
+    </div>
+
+    <div class="info-row">
+      <div class="info-card">
+        <div class="info-card-label">报名中考场</div>
+        <div class="info-card-value">3</div>
+        <div class="info-card-sub">截止日期最近 3 天内</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-label">本期已报名</div>
+        <div class="info-card-value">128</div>
+        <div class="info-card-sub">较上期 ↑ 12%</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-label">证书已发放</div>
+        <div class="info-card-value">1,204</div>
+        <div class="info-card-sub">累计颁发</div>
+      </div>
+    </div>
+
+    <div class="section-header">
+      <div class="section-title">近期考场安排</div>
+      <div class="section-link" onclick="switchPage('register')">查看全部 →</div>
+    </div>
+    <div class="exam-list">
+      <div class="exam-card" onclick="openExamModal('A')">
+        <div class="exam-date-box">
+          <div class="exam-date-month">3月</div>
+          <div class="exam-date-day">22</div>
+        </div>
+        <div class="exam-info">
+          <div class="exam-name">浦东新区·世纪公园体育中心</div>
+          <div class="exam-meta">
+            <span>📍 浦东新区</span>
+            <span>🕘 09:00–12:00</span>
+            <span>1–4 级</span>
+          </div>
+        </div>
+        <div class="exam-badge badge-open">报名中</div>
+      </div>
+      <div class="exam-card" onclick="openExamModal('B')">
+        <div class="exam-date-box">
+          <div class="exam-date-month">4月</div>
+          <div class="exam-date-day">05</div>
+        </div>
+        <div class="exam-info">
+          <div class="exam-name">徐汇区·徐汇体育馆</div>
+          <div class="exam-meta">
+            <span>📍 徐汇区</span>
+            <span>🕘 14:00–17:00</span>
+            <span>1–2 级</span>
+          </div>
+        </div>
+        <div class="exam-badge badge-open">报名中</div>
+      </div>
+      <div class="exam-card">
+        <div class="exam-date-box">
+          <div class="exam-date-month">4月</div>
+          <div class="exam-date-day">19</div>
+        </div>
+        <div class="exam-info">
+          <div class="exam-name">静安区·大宁体育中心</div>
+          <div class="exam-meta">
+            <span>📍 静安区</span>
+            <span>🕘 09:00–12:00</span>
+            <span>1–4 级</span>
+          </div>
+        </div>
+        <div class="exam-badge badge-soon">即将开放</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 报名页 ══ -->
+  <div id="page-register" class="page">
+    <div class="form-card">
+      <div class="form-card-title">选择考场</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">考试城市</label>
+          <select class="form-select">
+            <option>上海市</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">考试场次</label>
+          <select class="form-select" id="session-select">
+            <option value="">请选择场次</option>
+            <option value="A">3月22日 · 浦东世纪公园体育中心（1–4级）</option>
+            <option value="B">4月05日 · 徐汇体育馆（1–2级）</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <div class="form-card-title">考生信息</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">姓名</label>
+          <input class="form-input" type="text" placeholder="请输入真实姓名" id="reg-name">
+        </div>
+        <div class="form-group">
+          <label class="form-label">证件号码</label>
+          <input class="form-input" type="text" placeholder="身份证 / 户口本" id="reg-id">
+        </div>
+        <div class="form-group">
+          <label class="form-label">出生日期</label>
+          <input class="form-input" type="date" id="reg-birth">
+        </div>
+        <div class="form-group">
+          <label class="form-label">联系电话</label>
+          <input class="form-input" type="tel" placeholder="家长手机号" id="reg-phone">
+        </div>
+        <div class="form-group full">
+          <label class="form-label">所在俱乐部 / 学校（选填）</label>
+          <input class="form-input" type="text" placeholder="填写后可享受内部通道报名">
+        </div>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <div class="form-card-title">选择报考级别</div>
+      <div class="level-grid">
+        <button class="level-btn" onclick="selectLevel(this,1)">
+          <div class="level-btn-num">1级</div>
+          <div class="level-btn-text">入门基础</div>
+        </button>
+        <button class="level-btn" onclick="selectLevel(this,2)">
+          <div class="level-btn-num">2级</div>
+          <div class="level-btn-text">初步进阶</div>
+        </button>
+        <button class="level-btn" onclick="selectLevel(this,3)">
+          <div class="level-btn-num">3级</div>
+          <div class="level-btn-text">中级技能</div>
+        </button>
+        <button class="level-btn" onclick="selectLevel(this,4)">
+          <div class="level-btn-num">4级</div>
+          <div class="level-btn-text">高级认证</div>
+        </button>
+      </div>
+    </div>
+
+    <div class="submit-row">
+      <button class="btn-cancel" onclick="switchPage('home')">取消</button>
+      <button class="btn-submit" onclick="submitRegister()">提交报名</button>
+    </div>
+  </div>
+
+  <!-- ══ 成绩查询 ══ -->
+  <div id="page-score" class="page">
+    <div class="search-box">
+      <div class="form-group">
+        <label class="form-label">考生姓名</label>
+        <input class="form-input" type="text" placeholder="请输入姓名" id="q-name">
+      </div>
+      <div class="form-group">
+        <label class="form-label">证件号码</label>
+        <input class="form-input" type="text" placeholder="身份证后6位" id="q-id">
+      </div>
+      <button class="btn-search" onclick="queryScore()">查询</button>
+    </div>
+
+    <div id="score-result" style="display:none">
+      <div class="result-card">
+        <div class="result-header">
+          <div>
+            <div class="result-name" id="r-name">—</div>
+            <div class="result-id" id="r-examno">考号 —</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:11px;opacity:.6">考试日期</div>
+            <div id="r-date" style="font-size:13px;font-weight:500">—</div>
+          </div>
+        </div>
+        <div class="result-body">
+          <div class="result-grid">
+            <div>
+              <div class="result-item-label">报考级别</div>
+              <div class="result-item-value" id="r-level">—</div>
+            </div>
+            <div>
+              <div class="result-item-label">综合得分</div>
+              <div class="score-big" id="r-score">—</div>
+              <div class="score-label">满分 100 分</div>
+            </div>
+            <div>
+              <div class="result-item-label">考试结果</div>
+              <div class="result-item-value" id="r-result" style="color:var(--success)">—</div>
+            </div>
+          </div>
+          <div class="result-divider"></div>
+          <div class="cert-row">
+            <div>
+              <div class="cert-text">🎖 证书已生成，可申请邮寄</div>
+              <div class="cert-sub">预计 3–5 个工作日送达</div>
+            </div>
+            <button class="btn-cert">申请邮寄</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="score-empty" class="empty-state">
+      <div class="empty-icon">🔍</div>
+      <div class="empty-text">输入考生信息查询成绩</div>
+    </div>
+  </div>
+
+  <!-- ══ 考试流程 ══ -->
+  <div id="page-flow" class="page">
+    <div class="flow-container">
+
+      <div class="flow-section">
+        <div class="flow-section-head">📋 报名阶段</div>
+        <div class="flow-steps">
+          <div class="flow-step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <div class="step-title">选择考场与场次</div>
+              <div class="step-desc">选择合适的考场地点、考试级别及时间段</div>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <div class="step-title">在线填写报名信息</div>
+              <div class="step-desc">完善考生姓名、证件号、联系方式等基本信息</div>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <div class="step-title">等待报名截止</div>
+              <div class="step-desc">截止后系统生成最终考生名单，请关注通知</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-section">
+        <div class="flow-section-head">🏀 考试当天</div>
+        <div class="flow-steps">
+          <div class="flow-step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <div class="step-title">签到 & 领取考号</div>
+              <div class="step-desc">携带证件到签到台，领取当日考生编号</div>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <div class="step-title">按序参加考试</div>
+              <div class="step-desc">1–2级：系统核验信息后上场；3–4级：分组后依次进行</div>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <div class="step-title">完成确认</div>
+              <div class="step-desc">考试结束后到录入处确认完成状态</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-section">
+        <div class="flow-section-head">📊 成绩与证书</div>
+        <div class="flow-steps">
+          <div class="flow-step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <div class="step-title">成绩核算</div>
+              <div class="step-desc">1–2级约10天（系统自动）；3–4级约2–3天（人工录入）</div>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <div class="step-title">成绩公布</div>
+              <div class="step-desc">系统推送通知，考生可在「成绩查询」页面查看</div>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <div class="step-title">证书邮寄</div>
+              <div class="step-desc">合格考生证书制作约3–5天，完成后寄出</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-section">
+        <div class="flow-section-head">📐 各级别说明</div>
+        <div class="flow-steps">
+          <div class="flow-step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <div class="step-title">1–2级（基础组）</div>
+              <div class="step-desc">系统线上核验，适合6–10岁入门学员，评分由系统完成</div>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <div class="step-title">3–4级（进阶组）</div>
+              <div class="step-desc">分组上场，裁判现场打分，人工录入成绩，适合有一定基础学员</div>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <div class="step-title">俱乐部内部通道</div>
+              <div class="step-desc">俱乐部考生可通过专属入口报名，仅对本俱乐部成员开放</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tip-box">
+        <strong>⚠️ 温馨提示：</strong>考试前请确认保险领取情况，并关注官方通知了解最新考试须知。证书为实体证书，请填写准确的邮寄地址。
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- Exam Detail Modal -->
+<div class="modal-overlay" id="exam-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-exam-title">考场详情</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-detail-row">
+        <span class="modal-detail-label">考试日期</span>
+        <span class="modal-detail-value" id="m-date">—</span>
+      </div>
+      <div class="modal-detail-row">
+        <span class="modal-detail-label">考试时间</span>
+        <span class="modal-detail-value" id="m-time">—</span>
+      </div>
+      <div class="modal-detail-row">
+        <span class="modal-detail-label">考试地点</span>
+        <span class="modal-detail-value" id="m-loc">—</span>
+      </div>
+      <div class="modal-detail-row">
+        <span class="modal-detail-label">开设级别</span>
+        <span class="modal-detail-value" id="m-level">—</span>
+      </div>
+      <div class="modal-detail-row">
+        <span class="modal-detail-label">报名截止</span>
+        <span class="modal-detail-value" id="m-deadline">—</span>
+      </div>
+      <div class="modal-detail-row">
+        <span class="modal-detail-label">剩余名额</span>
+        <span class="modal-detail-value" id="m-quota">—</span>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal()">关闭</button>
+      <button class="btn-submit" onclick="goRegister()">立即报名</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+  const examData = {
+    A: { title:'浦东·世纪公园体育中心', date:'2025年3月22日（周六）', time:'09:00 – 12:00', loc:'浦东新区世纪大道2001号', level:'1级 / 2级 / 3级 / 4级', deadline:'3月18日 23:59', quota:'32 人' },
+    B: { title:'徐汇·徐汇体育馆', date:'2025年4月5日（周六）', time:'14:00 – 17:00', loc:'徐汇区漕宝路128号', level:'1级 / 2级', deadline:'4月1日 23:59', quota:'48 人' }
+  };
+
+  let selectedLevel = null;
+
+  function switchPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    const tabs = ['home','register','score','flow'];
+    document.querySelectorAll('.nav-tab')[tabs.indexOf(id)].classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function openExamModal(key) {
+    const d = examData[key];
+    document.getElementById('modal-exam-title').textContent = d.title;
+    document.getElementById('m-date').textContent = d.date;
+    document.getElementById('m-time').textContent = d.time;
+    document.getElementById('m-loc').textContent = d.loc;
+    document.getElementById('m-level').textContent = d.level;
+    document.getElementById('m-deadline').textContent = d.deadline;
+    document.getElementById('m-quota').textContent = d.quota;
+    document.getElementById('exam-modal').classList.add('open');
+  }
+  function closeModal() {
+    document.getElementById('exam-modal').classList.remove('open');
+  }
+  function goRegister() {
+    closeModal();
+    switchPage('register');
+  }
+
+  function selectLevel(btn, lvl) {
+    document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedLevel = lvl;
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2600);
+  }
+
+  function submitRegister() {
+    const name = document.getElementById('reg-name').value.trim();
+    const id = document.getElementById('reg-id').value.trim();
+    const phone = document.getElementById('reg-phone').value.trim();
+    const session = document.getElementById('session-select').value;
+    if (!session) { showToast('⚠️ 请选择考试场次'); return; }
+    if (!name) { showToast('⚠️ 请填写考生姓名'); return; }
+    if (!id) { showToast('⚠️ 请填写证件号码'); return; }
+    if (!phone) { showToast('⚠️ 请填写联系电话'); return; }
+    if (!selectedLevel) { showToast('⚠️ 请选择报考级别'); return; }
+    showToast('✅ 报名成功！请留意短信通知');
+    setTimeout(() => switchPage('home'), 1800);
+  }
+
+  function queryScore() {
+    const name = document.getElementById('q-name').value.trim();
+    const id = document.getElementById('q-id').value.trim();
+    if (!name || !id) { showToast('⚠️ 请填写姓名和证件号码'); return; }
+    // demo data
+    document.getElementById('r-name').textContent = name;
+    document.getElementById('r-examno').textContent = '考号 SH2025-0' + Math.floor(Math.random()*900+100);
+    document.getElementById('r-date').textContent = '2025年3月22日';
+    document.getElementById('r-level').textContent = '2 级';
+    document.getElementById('r-score').textContent = '87';
+    document.getElementById('r-result').textContent = '合格 ✓';
+    document.getElementById('score-empty').style.display = 'none';
+    document.getElementById('score-result').style.display = 'block';
+  }
+</script>
+</body>
+</html>
